@@ -32,8 +32,8 @@ commands:
               exit 1
             fi
             
-jobs:
-  build-frontend:
+  jobs:
+    build-frontend:
     docker:
       # Step 1.1 Select a Docker image that is compatible with NodeJS
       # step 1.1- docker img for node.js
