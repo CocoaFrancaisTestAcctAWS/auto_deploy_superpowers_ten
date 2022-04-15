@@ -211,7 +211,7 @@ jobs:
     docker:
       # Docker image here that supports Ansible
        - image: cimg/node:13.8.0  
-   steps:
+    steps:
       # Checkout code from git
       # Add ssh keys with fingerprint
       # attach workspace
