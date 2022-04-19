@@ -15,14 +15,14 @@
             command: |
               # Step 1.2 - Your code here
               # Add code to build/compile the front-end
-              cd frontend
-              npm install
-              npm run build
+              - cd frontend
+              - npm install
+              - npm run build
               # exit 1
         - save_cache:
             paths: [frontend/node_modules]
             key: frontend-build
-    build-backend:
+     build-backend:
         docker:
           # Step 1.3 Select a Docker image that is compatible with NodeJS
           - image: cimg/node:13.8.0
@@ -35,9 +35,9 @@
               command: |
                 # Step 1.4 - Your code here
                 # Add code to build/compile the back-end
-                cd backend
-                npm install
-                npm run build
+                - cd backend
+                - npm install
+                - npm run build
                 # exit 1
           - save_cache:
               paths: [backend/node_modules]
