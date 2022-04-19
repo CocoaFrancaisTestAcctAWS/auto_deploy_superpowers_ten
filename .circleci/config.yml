@@ -1,7 +1,7 @@
   version: 2.1
            
   jobs:
-    Build-frontend:
+    build-frontend:
       docker:
       # Step 1.1 Select a Docker image that is compatible with NodeJS
         - image: cimg/node:13.8.0    
