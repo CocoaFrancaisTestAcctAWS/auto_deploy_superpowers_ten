@@ -36,6 +36,23 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+  test-frontend:
+    docker:
+      # Docker image that is compatible with NodeJS.
+      - image: circleci/node:13.8.0
+    steps:
+      # Checkout code from git
+      # Restore from cache
+      # Your job code here
+      - checkout
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: frontend test
+          command: |
+            cd frontend
+            npm install
+            npm run test   
 
 workflows:
   default:
