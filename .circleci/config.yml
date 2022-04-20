@@ -1,6 +1,7 @@
 version: 2.1
           
 jobs:
+<<<<<<< HEAD
   Build-frontend:
     docker:
     # Step 1.1 Select a Docker image that is compatible with NodeJS
@@ -44,8 +45,34 @@ jobs:
             key: backend-build
 
 
+=======
+  build-frontend:
+    docker:
+      # Step 1.1 Select a Docker image that is compatible with NodeJS
+      - image: circleci/node:13.8.0    
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: Build front-end
+          command: |
+            - cd frontend
+            - npm install
+            - npm run build
+      - save_cache:
+          paths: [frontend/node_modules]
+          key: frontend-build
+
+
+
+>>>>>>> 614d3635382c7eddf3fdbe442268ee0875d622bf
 workflows:
   default:
     jobs:
       - build-frontend
+<<<<<<< HEAD
       - build-backend
+=======
+>>>>>>> 614d3635382c7eddf3fdbe442268ee0875d622bf
