@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   build-frontend:
     docker:
-      # Step 1.1 Select a Docker image that is compatible with NodeJS
+      # Step 1.1 Select a Docker image that is compatible with NodeJS 
       - image: circleci/node:13.8.0    
 
     steps:
