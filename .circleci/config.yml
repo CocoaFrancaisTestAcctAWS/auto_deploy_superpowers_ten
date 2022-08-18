@@ -83,10 +83,12 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: frontend scan
+          name: scan frontend dependencies
           command: |
               cd frontend
-              npm audit --audit-level=critical --force
+              npm install
+              npm audit fix --audit-level=critical --force
+              npm audit --audit-level=critical
   # scan-backend:
   #   docker:
   #     # Docker image that is compatible with NodeJS.
