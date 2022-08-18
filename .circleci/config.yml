@@ -71,22 +71,22 @@ jobs:
             npm install
             npm run test  
 
-  # scan-frontend:
-  #   docker:
-  #     # Docker image that is compatible with NodeJS.
-  #     - image: circleci/node:13.8.0
-  #   steps:
-  #     # Checkout code from git
-  #     # Restore from cache
-  #     # Your job code here
-  #     - checkout
-  #     - restore_cache:
-  #         keys: [frontend-build]
-  #     - run:
-  #         name: frontend scan
-  #         command: |
-  #             cd frontend
-  #             npm audit --audit-level=critical --force
+  scan-frontend:
+    docker:
+      # Docker image that is compatible with NodeJS.
+      - image: circleci/node:13.8.0
+    steps:
+      # Checkout code from git
+      # Restore from cache
+      # Your job code here
+      - checkout
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: frontend scan
+          command: |
+              cd frontend
+              npm audit --audit-level=critical --force
   # scan-backend:
   #   docker:
   #     # Docker image that is compatible with NodeJS.
@@ -115,5 +115,5 @@ workflows:
           requires: [build-backend]
       # - scan-backend:
       #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]          
+      - scan-frontend:
+          requires: [build-frontend]          
