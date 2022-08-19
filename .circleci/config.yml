@@ -1,4 +1,8 @@
 # udapeople-kphtj0mlze7sdpz43
+# Get an EIP (Elastic IP) which is free when the instance is running but paid 
+# a bit when the instance is stopped.
+# A mime multi-part file allows your script to override how frequently user data 
+# is run in the cloud-init package. Then, the file runs the user script
 version: 2.1
 
 jobs:
@@ -275,8 +279,8 @@ workflows:
               only: [master]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
       # - deploy-backend:
