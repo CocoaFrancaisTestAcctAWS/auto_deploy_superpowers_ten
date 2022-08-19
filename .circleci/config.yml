@@ -220,6 +220,8 @@ jobs:
             npm run migrations
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
+          timeout: 30m
+
       - run:
           name: Send migration status to kvdb.io 
           command: | 
@@ -284,4 +286,3 @@ workflows:
       # - cloudfront-update:
       #     requires: [smoke-test]
 
-      
