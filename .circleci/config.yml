@@ -102,7 +102,7 @@ jobs:
     steps:
       # Checkout code from git
       # Restore from cache
-      # Your job code here
+      # Your job code here  npm install --save-dev webpack@5.72.0  webpack@^4.37.0 || ^5.0.0
       - checkout
       - restore_cache:
           keys: [backend-build]
@@ -112,7 +112,7 @@ jobs:
               cd backend
               npm cache clean -f              
               npm install
-              npm install --save-dev webpack@5.72.0              
+                          
               npm audit fix         
               npm audit fix --audit-level=critical --force
               npm audit --audit-level=critical
@@ -135,6 +135,9 @@ jobs:
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
               
+  # in package.json reverted class-validator from ^0.12.2 back to ^0.9.1 per mentor suggestion
+  # in package.json reverted standard-version from ^7.0.0 back to ^4.4.0 per mentor suggestion 
+
   # in package.json changed class-validator from ^0.9.1 to ^0.12.2
   # in package.json changed standard-version from ^4.4.0 to  ^7.0.0
       - run:
