@@ -3,6 +3,7 @@
 # a bit when the instance is stopped.
 # A mime multi-part file allows your script to override how frequently user data 
 # is run in the cloud-init package. Then, the file runs the user script
+# 
 version: 2.1
 
 jobs:
