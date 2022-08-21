@@ -253,6 +253,8 @@ jobs:
       #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   revert-migrations:
+    docker:
+      - image: circleci/node:13.8.0
     description: Revert the last migration
     parameters:
       workflow_id:
