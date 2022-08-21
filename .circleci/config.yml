@@ -27,7 +27,11 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow_id >>
 
 
+<<<<<<< HEAD
   revert-migrations: #extraneous key [docker] is not permitted
+=======
+  revert-migrations:
+>>>>>>> 81bf82b8d5d5027f1760628fd382c38e1c206ca0
     description: Revert the last migration
     parameters:
       workflow_id:
@@ -368,8 +372,9 @@ jobs:
             
       - run:
           name: Deploy backend
+
           command: |
-            echo ENVIROMENT=$ENVIROMENT > "backend/.env"
+            echo ENVIRONMENT=$ENVIRONMENT > "backend/.env"
             echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> "backend/.env"
             echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> "backend/.env"
             echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> "backend/.env"
