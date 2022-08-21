@@ -271,8 +271,6 @@ jobs:
             curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
             yum -y install nodejs
             yum install python3-pip -y
- 
-
 
       - run:
           name: Get backend url
@@ -299,7 +297,6 @@ jobs:
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
 
-
   deploy-backend:
     docker: 
       - image: python:3.7-alpine3.11 
@@ -308,8 +305,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["a1:e8:06:8d:07:a0:7d:68:90:63:00:85:54:8c:6c:7b"]
       - attach_workspace:
-          at: ~/
- 
+          at: ~/ 
       - run:
           name: Install dependencies
           command: |
@@ -324,7 +320,6 @@ jobs:
             apk add --update ansible curl rsync openssh nodejs npm
             ansible --version
             aws --version
-
             
       - run:
           name: Deploy backend
@@ -358,11 +353,11 @@ jobs:
           command: python -m unittest
 
 
-      - destroy-environment: 
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      # - destroy-environment: 
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      # - revert-migrations:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   revert-migrations:
     docker:
