@@ -28,8 +28,6 @@ commands:
 
 
   revert-migrations:
-    docker:
-      - image: circleci/node:13.8.0
     description: Revert the last migration
     parameters:
       workflow_id:
