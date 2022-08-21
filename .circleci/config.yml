@@ -5,7 +5,51 @@
 # is run in the cloud-init package. Then, the file runs the user script
 # 
 version: 2.1
+commands:
+  destroy-environment:
+    description: Destroy backend and frontend cloudformation stacks given a workflow ID.
+    parameters:
+      workflow_id:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            echo "Destroying environment: << parameters.workflow_id >> "
+      - run:
+          name: "Destroy Backend and Frontend environment"
+          when: on_fail
+          command: |
+            aws s3 rm s3://udapeople-<< parameters.workflow_id >> --recursive
+            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflow_id >>
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow_id >>
 
+
+  revert-migrations:
+    docker:
+      - image: circleci/node:13.8.0
+    description: Revert the last migration
+    parameters:
+      workflow_id:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}   
+    steps:
+      - run:
+          name: Revert migrations
+          when: on_fail
+          command: |
+            SUCCESS=$(curl --insecure https://kvdb.io/CNXVssXp4xn36vXQNvVzgY/migration_<< parameters.workflow_id >>)
+            if (( $SUCCESS == 1 ));
+            then
+              cd ~/project/backend
+              npm install
+              npm run migration:revert
+            fi
+      
+ #           curl https://kvdb.io/CNXVssXp4xn36vXQNvVzgY/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+ 
 jobs:
   build-frontend:
     docker:
@@ -356,31 +400,9 @@ jobs:
       - destroy-environment: 
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
-      # - revert-migrations:
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
-  revert-migrations:
-    docker:
-      - image: circleci/node:13.8.0
-    description: Revert the last migration
-    parameters:
-      workflow_id:
-        type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:7}   
-    steps:
-      - run:
-          name: Revert migrations
-          when: on_fail
-          command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/CNXVssXp4xn36vXQNvVzgY/migration_<< parameters.workflow_id >>)
-            if (( $SUCCESS == 1 ));
-            then
-              cd ~/project/backend
-              npm install
-              npm run migration:revert
-            fi
-      
- #           curl https://kvdb.io/CNXVssXp4xn36vXQNvVzgY/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
 
 workflows:
   default:
