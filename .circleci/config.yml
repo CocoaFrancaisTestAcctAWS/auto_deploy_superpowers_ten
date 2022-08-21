@@ -238,7 +238,7 @@ jobs:
             npm run migrations
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
-          timeout: 30m
+          no_output_timeout: 30m
 
       - run:
           name: Send migration status to kvdb.io 
