@@ -253,25 +253,25 @@ jobs:
       #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   revert-migrations:
-  description: Revert the last migration
-  parameters:
-    workflow_id:
-      type: string
-      default: ${CIRCLE_WORKFLOW_ID:0:7}   
-  steps:
-    - run:
-        name: Revert migrations
-        when: on_fail
-        command: |
-          SUCCESS=$(curl --insecure https://kvdb.io/CNXVssXp4xn36vXQNvVzgY/migration_<< parameters.workflow_id >>)
-          if (( $SUCCESS == 1 ));
-          then
-            cd ~/project/backend
-            npm install
-            npm run migration:revert
-          fi
-    
-          curl https://kvdb.io/CNXVssXp4xn36vXQNvVzgY/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+    description: Revert the last migration
+    parameters:
+      workflow_id:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}   
+    steps:
+      - run:
+          name: Revert migrations
+          when: on_fail
+          command: |
+            SUCCESS=$(curl --insecure https://kvdb.io/CNXVssXp4xn36vXQNvVzgY/migration_<< parameters.workflow_id >>)
+            if (( $SUCCESS == 1 ));
+            then
+              cd ~/project/backend
+              npm install
+              npm run migration:revert
+            fi
+      
+ #           curl https://kvdb.io/CNXVssXp4xn36vXQNvVzgY/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
 
 workflows:
   default:
