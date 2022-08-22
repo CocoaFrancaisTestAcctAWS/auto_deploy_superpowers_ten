@@ -1,4 +1,5 @@
 ---
+# https://knowledge.udacity.com/questions/854563
 
 - name: "configuration play." 
   hosts: web
@@ -13,7 +14,7 @@
     TYPEORM_DATABASE: "{{ lookup('env','TYPEORM_DATABASE') }}"
     TYPEORM_MIGRATIONS: "{{ lookup('env','TYPEORM_MIGRATIONS') }}"
     TYPEORM_ENTITIES: "{{ lookup('env','TYPEORM_ENTITIES') }}"
-    ANSIBLE_HOST_KEY_CHECKING: false
+    ANSIBLE_HOST_KEY_CHECKING: "{{ lookup('env','ANSIBLE_CONFIG') }}"
 
   vars:
     - ansible_python_interpreter: /usr/bin/python3
