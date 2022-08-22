@@ -347,6 +347,7 @@ jobs:
 # CircleCI
 # c5:38:30:4a:4f:1b:cc:86:67:5c:e0:fe:b3:ed:54:fc
 # Added on Aug 17, 2022 by CircleCI with authorization from @UdacityTestAcctAWS
+# chmod 400
 
   deploy-backend:
     docker: 
