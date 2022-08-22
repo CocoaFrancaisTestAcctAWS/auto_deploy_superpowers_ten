@@ -340,13 +340,21 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
 # 6f:81:be:b5:62:71:fa:40:63:3d:74:23:ba:19:fc:de -circleci deployment key
 # a1:e8:06:8d:07:a0:7d:68:90:63:00:85:54:8c:6c:7b personal fingerprint key
+# a1:e8:06:8d:07:a0:7d:68:90:63:00:85:54:8c:6c:7b
+# SHA256:BBZj7unaL8dp4j+sTnp4Br1otcDDXAEoj7q6w8j8Mtg - GitHub
+# SHA256:3+wXPh9gFyylnpA+bHPfugrwWh+fhaJHpFLX/RzX3J4 - Circleci
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIApDad3yDw/7/tEpHKiRXcoB2joX7iTYEMa7ZIBZdQi7 udacity.test.accoount@gmail.com
+# CircleCI
+# c5:38:30:4a:4f:1b:cc:86:67:5c:e0:fe:b3:ed:54:fc
+# Added on Aug 17, 2022 by CircleCI with authorization from @UdacityTestAcctAWS
+
   deploy-backend:
     docker: 
       - image: python:3.7-alpine3.11 
     steps:
       - checkout 
       - add_ssh_keys:
-          fingerprints: ["6f:81:be:b5:62:71:fa:40:63:3d:74:23:ba:19:fc:de"]
+          fingerprints: ["c5:38:30:4a:4f:1b:cc:86:67:5c:e0:fe:b3:ed:54:fc"]
       - attach_workspace:
           at: ~/ 
       - run:
