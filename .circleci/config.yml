@@ -338,14 +338,15 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-
+# 6f:81:be:b5:62:71:fa:40:63:3d:74:23:ba:19:fc:de -circleci deployment key
+# a1:e8:06:8d:07:a0:7d:68:90:63:00:85:54:8c:6c:7b personal fingerprint key
   deploy-backend:
     docker: 
       - image: python:3.7-alpine3.11 
     steps:
       - checkout 
       - add_ssh_keys:
-          fingerprints: ["a1:e8:06:8d:07:a0:7d:68:90:63:00:85:54:8c:6c:7b"]
+          fingerprints: ["6f:81:be:b5:62:71:fa:40:63:3d:74:23:ba:19:fc:de"]
       - attach_workspace:
           at: ~/ 
       - run:
