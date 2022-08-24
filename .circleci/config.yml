@@ -479,19 +479,30 @@ jobs:
             curl -sL https://rpm.nodesource.com/setup_13.x | bash -
             yum install -y nodejs
 
+      # udapeople-kphtj0mlze7sdpz43 s3 bucket name
+      # udapeople-kphtj0mlze7sdpz99 s3 bucket name
+
+      # - run:
+      #     name: Update cloudfront distribution
+      #     command: |
+            # Change the initial stack name, as applicable to you
+            # aws cloudformation deploy \
+            #         --template-file .circleci/files/cloudfront.yml \
+            #         --stack-name InitialStack \
+            #         --region us-east-1 \
+            #         --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+            #         --tags project=udapeople
       - run:
           name: Update cloudfront distribution
           command: |
-            # Change the initial stack name, as applicable to you
-            aws cloudformation deploy \
-                    --template-file .circleci/files/cloudfront.yml \
-                    --stack-name InitialStack \
-                    --region us-east-1 \
-                    --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
-                    --tags project=udapeople
+            
+            aws cloudformation update-stack \
+              --use-previous-template \
+              --stack-name udapeople-cloudfront \
+              --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:7}
       # Here's where you will add some code to rollback on failure
       - revert-migrations
-      - destroy-environment  
+#     - destroy-environment  
 
 
 

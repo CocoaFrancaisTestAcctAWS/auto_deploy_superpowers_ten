@@ -6,6 +6,8 @@ Parameters:
     Description: Unique identifier.
     Type: String
 
+# udapeople-kphtj0mlze7sdpz43 s3 bucket name
+# udapeople-kphtj0mlze7sdpz99 s3 bucket name
 
 Resources:
   
