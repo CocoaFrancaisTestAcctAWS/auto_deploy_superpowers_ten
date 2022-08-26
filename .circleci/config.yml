@@ -139,6 +139,8 @@ jobs:
               npm install
               npm audit fix --audit-level=critical --force
               npm audit --audit-level=critical
+              npm update mkdirp --depth 4
+              run npm audit fix
   scan-backend:
     docker:
       # Docker image that is compatible with NodeJS.
@@ -189,6 +191,9 @@ jobs:
 
   # in package.json changed class-validator from ^0.9.1 to ^0.12.2
   # in package.json changed standard-version from ^4.4.0 to  ^7.0.0
+  #
+  #
+  #
   #
   #
   #
