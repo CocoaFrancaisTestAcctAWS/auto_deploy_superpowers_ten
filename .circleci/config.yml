@@ -181,7 +181,7 @@ jobs:
 
   # 29th commit  in file - backend/src/migrations/1549398619849-FixProductIdTable.ts  and per mentor 
   # suggestion, inserted the line-  awaitqueryRunner.query(); after line 11, which made the
-  # insertion become line 13            
+  # insertion become line 12            
   # awaitqueryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
 
   # in package.json reverted class-validator from ^0.12.2 back to ^0.9.1 per mentor suggestion
