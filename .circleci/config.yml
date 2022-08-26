@@ -190,6 +190,8 @@ jobs:
   # in package.json changed class-validator from ^0.9.1 to ^0.12.2
   # in package.json changed standard-version from ^4.4.0 to  ^7.0.0
   #
+  #
+  #
       - run:  
           name: Ensure front-end infrastructure exist
           command: |
