@@ -75,7 +75,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+ #         keys: [backend-build]
       - run:
           name: Back-end build
           command: |
@@ -592,3 +592,5 @@ workflows:
       # - cloudfront-update:
       #     requires: [smoke-test]
 
+# awaitqueryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+# backend/src/migrations/1549398619849-FixProductIdTable.ts 
