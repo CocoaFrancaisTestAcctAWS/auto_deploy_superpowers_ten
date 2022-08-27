@@ -74,7 +74,6 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
 
       - run:
           name: Back-end build
