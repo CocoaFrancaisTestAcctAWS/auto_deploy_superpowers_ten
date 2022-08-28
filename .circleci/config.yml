@@ -342,8 +342,8 @@ jobs:
             cd frontend
             cat .env
             npm install
-            #npm audit fix
-            #npm audit fix --force
+            npm audit fix
+            npm audit fix --force
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
@@ -611,3 +611,17 @@ workflows:
           #     npm audit fix         
           #     npm audit fix --audit-level=critical --force
           #     npm audit --audit-level=critical
+# npm WARN using --force Recommended protections disabled.
+# npm ERR! code EACCES
+# npm ERR! syscall unlink
+# npm ERR! path /home/patti-awesome/.npm/_cacache/content-v2/sha512/a1/24/5864bda5959632255583b204b233e18acbaf27ff9068efc9f49678d8ccdffc9458bd6276e5606cf6771be78fe774497829e06b7c7992e19497b4797d3c35
+# npm ERR! errno -13
+# npm ERR! 
+# npm ERR! Your cache folder contains root-owned files, due to a bug in
+# npm ERR! previous versions of npm which has since been addressed.
+# npm ERR! 
+# npm ERR! To permanently fix this problem, please run:
+# npm ERR!   sudo chown -R 1000:1000 "/home/patti-awesome/.npm"
+
+# npm ERR! A complete log of this run can be found in:
+# npm ERR!     /home/patti-awesome/.npm/_logs/2022-08-28T06_25_34_957Z-debug-0.log
