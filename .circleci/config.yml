@@ -80,6 +80,7 @@ jobs:
           name: Back-end build
           command: |
             cd backend
+            npm install typescript --loglevel verbose
             npm install
             npm run build
             
