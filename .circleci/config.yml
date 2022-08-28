@@ -53,7 +53,7 @@ commands:
 jobs:
   build-frontend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -71,7 +71,7 @@ jobs:
 
   build-backend:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -90,7 +90,7 @@ jobs:
   test-frontend:
     docker:
       # Docker image that is compatible with NodeJS.
-      - image: circleci/node:13.8.0
+      - image: cimg/node:13.8.0
     steps:
       # Checkout code from git
       # Restore from cache
@@ -107,7 +107,7 @@ jobs:
   test-backend:
     docker:
       # Docker image that is compatible with NodeJS.
-      - image: circleci/node:13.8.0
+      - image: cimg/node:13.8.0
     steps:
       # Checkout code from git
       # Restore from cache
@@ -125,7 +125,7 @@ jobs:
   scan-frontend:
     docker:
       # Docker image that is compatible with NodeJS.
-      - image: circleci/node:13.8.0
+      - image: cimg/node:13.8.0
     steps:
       # Checkout code from git
       # Restore from cache
@@ -145,7 +145,7 @@ jobs:
   scan-backend:
     docker:
       # Docker image that is compatible with NodeJS.
-      - image: circleci/node:13.8.0
+      - image: cimg/node:13.8.0
     steps:
       # Checkout code from git
       # Restore from cache
@@ -175,7 +175,7 @@ jobs:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
-              --template-file .circleci/files/backend.yml \
+              --template-file .cimg/files/backend.yml \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
@@ -200,7 +200,7 @@ jobs:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
-              --template-file .circleci/files/frontend.yml \
+              --template-file .cimg/files/frontend.yml \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
@@ -211,16 +211,16 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            echo [web] > .circleci/ansible/inventory.txt   
+            echo [web] > .cimg/ansible/inventory.txt   
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --output text >> .circleci/ansible/inventory.txt
-            cat .circleci/ansible/inventory.txt  
+            --output text >> .cimg/ansible/inventory.txt
+            cat .cimg/ansible/inventory.txt  
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - project/.cimg/ansible/inventory.txt
 
       # - destroy-environment:backend
       #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"    
@@ -245,7 +245,7 @@ jobs:
           command: |
             # code added here
             pwd
-            cat .circleci/ansible/inventory.txt
+            cat .cimg/ansible/inventory.txt
             echo ENVIRONMENT=production > "backend/.env"
             ls
             echo TYPEORM_CONNECTION=postgres >> "backend/.env"
@@ -259,7 +259,7 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             # upto here new        
-            cd .circleci/ansible
+            cd .cimg/ansible
             ansible-playbook -i inventory.txt configure-server.yml
           no_output_timeout: 30m
 
@@ -269,7 +269,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -347,15 +347,15 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-# 6f:81:be:b5:62:71:fa:40:63:3d:74:23:ba:19:fc:de -circleci deployment key
+# 6f:81:be:b5:62:71:fa:40:63:3d:74:23:ba:19:fc:de -cimg deployment key
 # a1:e8:06:8d:07:a0:7d:68:90:63:00:85:54:8c:6c:7b personal fingerprint key
 # a1:e8:06:8d:07:a0:7d:68:90:63:00:85:54:8c:6c:7b
 # SHA256:BBZj7unaL8dp4j+sTnp4Br1otcDDXAEoj7q6w8j8Mtg - GitHub
-# SHA256:3+wXPh9gFyylnpA+bHPfugrwWh+fhaJHpFLX/RzX3J4 - Circleci
+# SHA256:3+wXPh9gFyylnpA+bHPfugrwWh+fhaJHpFLX/RzX3J4 - cimg
 # ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIApDad3yDw/7/tEpHKiRXcoB2joX7iTYEMa7ZIBZdQi7 udacity.test.accoount@gmail.com
-# CircleCI
+# cimg
 # c5:38:30:4a:4f:1b:cc:86:67:5c:e0:fe:b3:ed:54:fc
-# Added on Aug 17, 2022 by CircleCI with authorization from @UdacityTestAcctAWS
+# Added on Aug 17, 2022 by cimg with authorization from @UdacityTestAcctAWS
 # chmod 400
 # export ANSIBLE_HOST_KEY_CHECKING=False
 
@@ -406,7 +406,7 @@ jobs:
             tar -C backend -czvf artifact.tar.gz . 
             pwd
             ls
-            cd .circleci/ansible
+            cd .cimg/ansible
             echo "Contents of the inventory.txt file are -------"
             cat inventory.txt
             export ANSIBLE_HOST_KEY_CHECKING=False
@@ -497,7 +497,7 @@ jobs:
       #     command: |
             # Change the initial stack name, as applicable to you
             # aws cloudformation deploy \
-            #         --template-file .circleci/files/cloudfront.yml \
+            #         --template-file .cimg/files/cloudfront.yml \
             #         --stack-name InitialStack \
             #         --region us-east-1 \
             #         --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
