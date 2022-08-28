@@ -81,7 +81,7 @@ jobs:
           command: |
             cd backend
             npm install typescript --loglevel verbose
-            npm install -g
+            sudo npm install -g
             npm run build
             
       - save_cache:
