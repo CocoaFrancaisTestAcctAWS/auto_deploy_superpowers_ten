@@ -597,3 +597,10 @@ workflows:
 # backend/src/migrations/1549398619849-FixProductIdTable.ts 
 # at line 83, added npm install typescript --loglevel verbose per mentor suggestion
 #
+# awaitqueryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+
+
+# 4th commit  in file - backend/src/migrations/1549398619849-FixProductIdTable.ts  and per mentor 
+# suggestion, inserted the line-  awaitqueryRunner.query(); after line 11, which made the
+# insertion become line 13            
+# awaitqueryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);

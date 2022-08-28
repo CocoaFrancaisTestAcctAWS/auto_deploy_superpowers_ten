@@ -38,10 +38,11 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-      KeyName: udacity # If you use another key pair name, you should change this value to match.
+      KeyName: auto-deploy-keypair # udacity  If you use another key pair name, you should change this value to match.
       # If this ami id is not available for you, you can find another (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html)
       # Ubuntu 18 or higher works fine ami-08d4ac5b634553e16   ami-0c4f7023847b90238 
-      # ami-08d4ac5b634553e16
+      # ami-08d4ac5b634553e16    ami-0729e439b6769d6ab (18.04)    ami-08d4ac5b634553e16 (20.04)
+      # ami-052efd3df9dad4825 (22.04)
       ImageId:  ami-0c4f7023847b90238 
        
       Tags:
