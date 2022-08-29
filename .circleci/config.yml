@@ -81,9 +81,9 @@ jobs:
           command: |
             cd backend
             sudo npm install -g typescript
-            npm init -y && npm i typescript --save-dev && npx tsc --init
-            npm install
-            npm run build
+            sudo npm init -y && npm i typescript --save-dev && npx tsc --init
+            sudo npm install
+            sudo npm run build
             
       - save_cache:
           paths: [backend/node_modules]
