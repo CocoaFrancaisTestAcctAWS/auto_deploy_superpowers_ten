@@ -80,7 +80,8 @@ jobs:
           name: Back-end build
           command: |
             cd backend
-            sudo npm install -g typescript --loglevel verbose
+            sudo npm install -g typescript
+            npm install
             npm run build
             
       - save_cache:
