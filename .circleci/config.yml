@@ -81,7 +81,7 @@ jobs:
           command: |
             cd backend
             sudo npm install -g typescript
-            sudo npm init -y && npm i typescript --save-dev && npx tsc --init
+            sudo npm init -y && sudo npm i typescript --save-dev && sudo npx tsc --init
             sudo npm install
             sudo npm run build
             
