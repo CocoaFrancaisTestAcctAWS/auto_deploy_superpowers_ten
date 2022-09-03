@@ -54,8 +54,8 @@ jobs:
           name: Build front-end
           command: |
             cd frontend
-            npm init
             npm install
+            npm init
             npm run build           
       - save_cache:
           paths: [frontend/node_modules]
@@ -73,8 +73,8 @@ jobs:
           name: Back-end build
           command: |
             cd backend
-            npm init
             npm install
+            npm init
             npm run build           
       - save_cache:
           paths: [backend/node_modules]
@@ -121,8 +121,8 @@ jobs:
           name: Scan frontend dependencies
           command: |
             cd frontend
-            npm init
             npm install
+            npm init
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
 
@@ -137,9 +137,8 @@ jobs:
           name: Scan backend dependencies
           command: |
             cd backend
-            npm init
-            npm init
             npm install
+            npm init
             npm install --save-dev webpack@5.72.0
             npm audit fix         
             npm audit fix --audit-level=critical --force
