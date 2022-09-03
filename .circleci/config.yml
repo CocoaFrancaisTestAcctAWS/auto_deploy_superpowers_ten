@@ -1,12 +1,5 @@
-# udapeople-kphtj0mlze7sdpz43
-# Get an EIP (Elastic IP) which is free when the instance is running but paid 
-# a bit when the instance is stopped.
-# A mime multi-part file allows your script to override how frequently user data 
-# is run in the cloud-init package. Then, the file runs the user script
-# 
-#
-#
 version: 2.1
+
 commands:
   destroy-environment:
     description: Destroy backend and frontend cloudformation stacks given a workflow ID.
@@ -40,20 +33,19 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/CNXVssXp4xn36vXQNvVzgY/migration_<< parameters.workflow_id >>)
+            SUCCESS=$(curl --insecure https://kvdb.io/N4WnpYNLfMTMbwrNZrUZGT/migration_<< parameters.workflow_id >>)
             if (( $SUCCESS == 1 ));
             then
               cd ~/project/backend
               npm install
               npm run migration:revert
             fi
-      
- #           curl https://kvdb.io/CNXVssXp4xn36vXQNvVzgY/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
- 
+            
+
 jobs:
   build-frontend:
     docker:
-      - image: cimg/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -63,15 +55,15 @@ jobs:
           command: |
             cd frontend
             npm install
-            npm run build
-           
+            npm run build           
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
 
+
   build-backend:
     docker:
-      - image: cimg/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -80,87 +72,74 @@ jobs:
           name: Back-end build
           command: |
             cd backend
-            npm install -g typescript
-            npm init -y &&  npm i typescript --save-dev &&  npx tsc --init
             npm install
-            npm run build
-            
+            npm run build           
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+
+
   test-frontend:
     docker:
-      # Docker image that is compatible with NodeJS.
-      - image: cimg/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
-      - checkout
+      - checkout 
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: frontend test
+          name: Run frontend test
           command: |
             cd frontend
             npm install
-            npm run test   
+            npm run test
+
+                
   test-backend:
     docker:
-      # Docker image that is compatible with NodeJS.
-      - image: cimg/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
       - checkout
       - restore_cache:
           keys: [backend-build]
       - run:
-          name: backend test
+          name: Run backend test
           command: |
             cd backend
             npm install
-            npm run test  
+            npm run test
 
   scan-frontend:
     docker:
-      # Docker image that is compatible with NodeJS.
-      - image: cimg/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
       - checkout
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: scan frontend dependencies
+          name: Scan frontend dependencies
           command: |
-              cd frontend
-              npm install
-              npm audit fix --audit-level=critical --force
-              npm audit --audit-level=critical
-              npm update mkdirp --depth 4
-              run npm audit fix
+            cd frontend
+            npm install
+            npm audit fix --audit-level=critical --force
+            npm audit --audit-level=critical
+
   scan-backend:
     docker:
-      # Docker image that is compatible with NodeJS.
-      - image: cimg/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here  npm install --save-dev webpack@5.72.0  webpack@^4.37.0 || ^5.0.0
-      #  removed    npm cache clean -f        from commands below... where the blank line is on line 157      
       - checkout
       - restore_cache:
           keys: [backend-build]
       - run:
-          name: backend scan
+          name: Scan backend dependencies
           command: |
-              cd backend
-              npm install
-              npm audit fix         
+            cd backend
+            npm install
+            npm install --save-dev webpack@5.72.0
+            npm audit fix         
+            npm audit fix --audit-level=critical --force
+            npm audit --audit-level=critical
+
 
   deploy-infrastructure:
     docker:
@@ -172,36 +151,22 @@ jobs:
           command: |
             yum -y install tar 
             yum -y install gzip
+
       - run:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
-              --template-file .cimg/files/backend.yml \
+              --template-file .circleci/files/backend.yml \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
-
-  # 29th commit  in file - backend/src/migrations/1549398619849-FixProductIdTable.ts  and per mentor 
-  # suggestion, inserted the line-  awaitqueryRunner.query(); after line 11, which made the
-  # insertion become line 12            
-  # awaitqueryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
-
-  # in package.json reverted class-validator from ^0.12.2 back to ^0.9.1 per mentor suggestion
-  # in package.json reverted standard-version from ^7.0.0 back to ^4.4.0 per mentor suggestion 
-
-  # in package.json changed class-validator from ^0.9.1 to ^0.12.2
-  # in package.json changed standard-version from ^4.4.0 to  ^7.0.0
-  #
-  #
-  #
-  #
-  #
-  #
-      - run:  
+              
+    
+      - run:
           name: Ensure front-end infrastructure exist
           command: |
             aws cloudformation deploy \
-              --template-file .cimg/files/frontend.yml \
+              --template-file .circleci/files/frontend.yml \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople
@@ -212,19 +177,21 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            echo [web] > .cimg/ansible/inventory.txt   
+            echo [web] > .circleci/ansible/inventory.txt   
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --output text >> .cimg/ansible/inventory.txt
-            cat .cimg/ansible/inventory.txt  
+            --output text >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt  
+
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.cimg/ansible/inventory.txt
+            - project/.circleci/ansible/inventory.txt
 
-      # - destroy-environment:backend
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"    
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"    
+
   
   configure-infrastructure:
     docker:
@@ -232,7 +199,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["a1:e8:06:8d:07:a0:7d:68:90:63:00:85:54:8c:6c:7b"]
+          fingerprints: ["87:70:7a:b7:70:8e:14:f7:f8:21:e2:d8:48:ae:29:4f"]
       - attach_workspace:
           at: ~/
        
@@ -241,12 +208,14 @@ jobs:
           command: |
             pip3 install ansible awscli
             sudo apt-get install -y tar gzip
+
+
       - run:
           name: Configure server
           command: |
             # code added here
             pwd
-            cat .cimg/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
             echo ENVIRONMENT=production > "backend/.env"
             ls
             echo TYPEORM_CONNECTION=postgres >> "backend/.env"
@@ -260,17 +229,17 @@ jobs:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
             # upto here new        
-            cd .cimg/ansible
+            cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
           no_output_timeout: 30m
 
-      # - destroy-environment:
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 
   run-migrations:
     docker:
-      - image: cimg/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -290,19 +259,18 @@ jobs:
             npm run migrations
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
-          no_output_timeout: 30m
 
       - run:
           name: Send migration status to kvdb.io 
           command: | 
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl https://kvdb.io/CNXVssXp4xn36vXQNvVzgY/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
-
+              curl https://kvdb.io/N4WnpYNLfMTMbwrNZrUZGT/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
+      - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
-      # - destroy-environment:
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+
   deploy-frontend:
     docker:
       - image: amazon/aws-cli
@@ -323,6 +291,8 @@ jobs:
             curl -sL https://rpm.nodesource.com/setup_lts.x | bash -
             yum -y install nodejs
             yum install python3-pip -y
+ 
+
 
       - run:
           name: Get backend url
@@ -343,22 +313,12 @@ jobs:
             cd frontend
             cat .env
             npm install
-            npm audit fix
-            npm audit fix --force
+            #npm audit fix
+            #npm audit fix --force
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-# 6f:81:be:b5:62:71:fa:40:63:3d:74:23:ba:19:fc:de -cimg deployment key
-# a1:e8:06:8d:07:a0:7d:68:90:63:00:85:54:8c:6c:7b personal fingerprint key
-# a1:e8:06:8d:07:a0:7d:68:90:63:00:85:54:8c:6c:7b
-# SHA256:BBZj7unaL8dp4j+sTnp4Br1otcDDXAEoj7q6w8j8Mtg - GitHub
-# SHA256:3+wXPh9gFyylnpA+bHPfugrwWh+fhaJHpFLX/RzX3J4 - cimg
-# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIApDad3yDw/7/tEpHKiRXcoB2joX7iTYEMa7ZIBZdQi7 udacity.test.accoount@gmail.com
-# cimg
-# c5:38:30:4a:4f:1b:cc:86:67:5c:e0:fe:b3:ed:54:fc
-# Added on Aug 17, 2022 by cimg with authorization from @UdacityTestAcctAWS
-# chmod 400
-# export ANSIBLE_HOST_KEY_CHECKING=False
+
 
   deploy-backend:
     docker: 
@@ -366,9 +326,10 @@ jobs:
     steps:
       - checkout 
       - add_ssh_keys:
-          fingerprints: ["c5:38:30:4a:4f:1b:cc:86:67:5c:e0:fe:b3:ed:54:fc"]
+          fingerprints: ["987:70:7a:b7:70:8e:14:f7:f8:21:e2:d8:48:ae:29:4f"]
       - attach_workspace:
-          at: ~/ 
+          at: ~/
+ 
       - run:
           name: Install dependencies
           command: |
@@ -383,14 +344,13 @@ jobs:
             apk add --update ansible curl rsync openssh nodejs npm
             ansible --version
             aws --version
-            
 
-          
+            
       - run:
           name: Deploy backend
-
+          no_output_timeout: 30m
           command: |
-            echo ENVIRONMENT=$ENVIRONMENT > "backend/.env"
+            echo ENVIROMENT=$ENVIROMENT > "backend/.env"
             echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> "backend/.env"
             echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> "backend/.env"
             echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> "backend/.env"
@@ -407,10 +367,9 @@ jobs:
             tar -C backend -czvf artifact.tar.gz . 
             pwd
             ls
-            cd .cimg/ansible
+            cd .circleci/ansible
             echo "Contents of the inventory.txt file are -------"
             cat inventory.txt
-            export ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook -i inventory.txt deploy-backend.yml
           
       - run:
@@ -419,11 +378,11 @@ jobs:
           command: python -m unittest
 
 
-      # - destroy-environment: 
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment: 
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
-      # - revert-migrations:
-      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 
   smoke-test:
@@ -439,6 +398,8 @@ jobs:
             pip3 install --upgrade pip
             pip3 install awscli
             aws --version
+
+
       - run:
           name: Backend smoke test.
           command: |
@@ -451,7 +412,7 @@ jobs:
             --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
-            if curl "${API_URL}/api/status" 
+            if curl "${API_URL}/api/status" | grep "ok"
               then
                 return 0
               else
@@ -470,11 +431,12 @@ jobs:
             else
               return 1
             fi
-      # - destroy-environment:
-      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
             
-      # - revert-migrations:
-      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
           
 
   cloudfront-update:
@@ -488,21 +450,7 @@ jobs:
             yum install -y tar gzip curl
             curl -sL https://rpm.nodesource.com/setup_13.x | bash -
             yum install -y nodejs
-
-      # udapeople-kphtj0mlze7sdpz43 s3 bucket name
-      # udapeople-kphtj0mlze7sdpz99 s3 bucket name
-      # udapeople-kphtj0mlze7sfsx77 s3 bucket name
-
-      # - run:
-      #     name: Update cloudfront distribution
-      #     command: |
-            # Change the initial stack name, as applicable to you
-            # aws cloudformation deploy \
-            #         --template-file .cimg/files/cloudfront.yml \
-            #         --stack-name InitialStack \
-            #         --region us-east-1 \
-            #         --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
-            #         --tags project=udapeople
+           
       - run:
           name: Update cloudfront distribution
           command: |
@@ -511,30 +459,12 @@ jobs:
               --use-previous-template \
               --stack-name udapeople-cloudfront \
               --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:7}
-      # Here's where you will add some code to rollback on failure udapeople-kphtj0mlze7sfsu58
-      - revert-migrations
-#     - destroy-environment  
-
-
-
-
-
-
-
-      # - run:
-      #     name: Update cloudfront distribution
-      #     command: |
-            
-      #       aws cloudformation update-stack \
-      #         --use-previous-template \
-      #         --stack-name udapeople-cloudfront \
-      #         --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:7}
        
 
-      # - destroy-environment:
-      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-      # - revert-migrations:
-      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
 
   cleanup:
@@ -551,15 +481,17 @@ jobs:
             export STACKS=$(aws cloudformation list-stacks --query "StackSummaries[*].StackName" --stack-status-filter "CREATE_COMPLETE" --no-paginate --output text) 
             echo Stack names: "${STACKS[@]}"
 
+
             if [[ "${OldWorkflowID}" =~ "${CIRCLE_WORKFLOW_ID:0:7}" ]]
             then
-              echo "-------------- Cleanup in progress -----------------"
+              echo "------------I am cleaning the house-------------"
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
             else
-              echo "--------------- Cleanup failed----------------------"
+              echo "---------Unable to clean------------"
             fi
+
 
 workflows:
   default:
@@ -570,62 +502,29 @@ workflows:
           requires: [build-frontend]
       - test-backend:
           requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]          
-      # - deploy-infrastructure:
-      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #     filters:
-      #       branches:
-      #         only: [master]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
-
-# awaitqueryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
-# backend/src/migrations/1549398619849-FixProductIdTable.ts 
-# at line 83, added npm install typescript --loglevel verbose per mentor suggestion
-#
-# awaitqueryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [master]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
+      - cloudfront-update:
+          requires: [smoke-test]
+      # - cleanup:
+      #     requires: [cloudfront-update]
 
 
-# 4th commit  in file - backend/src/migrations/1549398619849-FixProductIdTable.ts  and per mentor 
-# suggestion, inserted the line-  awaitqueryRunner.query(); after line 11, which made the
-# insertion become line 13            
-# awaitqueryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
-
-          # name: backend scan
-          # command: |
-          #     cd backend
-          #     npm install
-                          
-          #     npm audit fix         
-          #     npm audit fix --audit-level=critical --force
-          #     npm audit --audit-level=critical
-# npm WARN using --force Recommended protections disabled.
-# npm ERR! code EACCES
-# npm ERR! syscall unlink
-# npm ERR! path /home/patti-awesome/.npm/_cacache/content-v2/sha512/a1/24/5864bda5959632255583b204b233e18acbaf27ff9068efc9f49678d8ccdffc9458bd6276e5606cf6771be78fe774497829e06b7c7992e19497b4797d3c35
-# npm ERR! errno -13
-# npm ERR! 
-# npm ERR! Your cache folder contains root-owned files, due to a bug in
-# npm ERR! previous versions of npm which has since been addressed.
-# npm ERR! 
-# npm ERR! To permanently fix this problem, please run:
-# npm ERR!   sudo chown -R 1000:1000 "/home/patti-awesome/.npm"
-
-# npm ERR! A complete log of this run can be found in:
-# npm ERR!     /home/patti-awesome/.npm/_logs/2022-08-28T06_25_34_957Z-debug-0.log
-#
-#
-#
+ 
