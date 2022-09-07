@@ -63,7 +63,7 @@ jobs:
 
   build-backend:
     docker:
-      - image: cimg/node:13.8.0
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -332,7 +332,9 @@ jobs:
 # The last/third step is to access the value associated with a particular key. The command is:
 # # Example
 # curl --insecure  https://kvdb.io/W8BXm6Qw2kkttJJAySZvUc/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}
-
+#
+#
+#
       - run:
           name: Deploy frontend objects
           command: |
