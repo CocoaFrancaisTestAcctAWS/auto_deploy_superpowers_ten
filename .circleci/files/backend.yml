@@ -43,7 +43,7 @@ Resources:
       # Ubuntu 18 or higher works fine ami-08d4ac5b634553e16   ami-0c4f7023847b90238 
       # ami-08d4ac5b634553e16    ami-0729e439b6769d6ab (18.04)    ami-08d4ac5b634553e16 (20.04)
       # ami-052efd3df9dad4825 (22.04) ami-0c4f7023847b90238 ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20220419
-      ImageId:  ami-0c4f7023847b90238
+      ImageId:  ami-0729e439b6769d6ab
        
       Tags:
         - Key: Name

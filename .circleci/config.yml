@@ -523,7 +523,7 @@ jobs:
 
 
 workflows:
-  default:
+  superpowers_ten:
     jobs:
       - build-frontend
       - build-backend
